@@ -257,6 +257,7 @@ class GameActivity : AppCompatActivity() {
         crearCanalNotificacion()
     }
 
+    @SuppressLint("DefaultLocale")
     private fun checkResult(symbol1: Int, symbol2: Int, symbol3: Int, callback: (GameResult?) -> Unit) {
         val screenshotLinearLayout = findViewById<LinearLayout>(R.id.screenshotLinearLayout)
         val symbol1Index = symbols.indexOf(symbol1)
@@ -345,8 +346,15 @@ class GameActivity : AppCompatActivity() {
         obtenerUbicacion { location ->
             val gameResult = jugadorActual?.id?.let { playerId ->
                 val calendar = Calendar.getInstance()
-                val currentDateTime = "${calendar.get(Calendar.DAY_OF_MONTH)}/${calendar.get(Calendar.MONTH) + 1}/${calendar.get(Calendar.YEAR)} " +
-                        "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}:${calendar.get(Calendar.SECOND)}"
+                val currentDateTime = String.format(
+                    "%02d/%02d/%d %02d:%02d:%02d",
+                    calendar.get(Calendar.DAY_OF_MONTH),
+                    calendar.get(Calendar.MONTH) + 1,
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE),
+                    calendar.get(Calendar.SECOND)
+                )
 
                 println(getString(R.string.user_location) +
                         " [" + location + "]")

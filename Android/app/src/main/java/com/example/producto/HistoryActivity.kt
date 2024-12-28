@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
@@ -13,19 +14,27 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.producto.dao.GameResultDao
+import com.example.producto.dao.PlayerDao
 import com.example.producto3.R
 import com.example.producto3.databinding.ActivityHistoryBinding
 import com.example.producto.model.Player
 import com.example.producto.model.GameResult
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.Locale
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class HistoryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHistoryBinding
-    // TODO private lateinit var database: AppDatabase
     private var musicReceiver: MusicReceiver? = null
     private var jugadorActual: Player? = null
+    private val playerDao = PlayerDao()
+    private val gameResultDao = GameResultDao()
     private lateinit var gameResultList: List<GameResult>
 
     @SuppressLint("NewApi")
@@ -39,25 +48,24 @@ class HistoryActivity : AppCompatActivity() {
             showLanguagePopup(view)
         }
 
-        // TODO database = AppDatabase.getInstance(this)
+        val jugadorId = intent.getStringExtra("jugadorId").toString()
 
-        val jugadorId = intent.getIntExtra("jugadorId", -1)
+        playerDao.findPlayerById(jugadorId) { player ->
+            if (player != null) {
+                jugadorActual = player
+            }
+        }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
-        /* TODO lifecycleScope.launch {
-            jugadorActual = withContext(Dispatchers.IO) {
-                database.playerDao().getAllPlayers().find { it.id == jugadorId }
-            }
-            if (jugadorActual != null) {
-                gameResultList = withContext(Dispatchers.IO) {
-                    database.gameResultDao().getHistoryByPlayer(jugadorId)
-                }
+        lifecycleScope.launch {
+            try {
+                gameResultList = gameResultDao.getHistoryByPlayerSuspend(jugadorId)
                 actualizarHistorial(gameResultList)
-            } else {
-                finish()
+            } catch (e: Exception) {
+                Log.e("Historial", "Error al obtener historial: ${e.message}")
             }
-        } */
+        }
 
         binding.botonIniciarJuego.setOnClickListener {
             if (jugadorActual != null) {
@@ -154,6 +162,22 @@ class HistoryActivity : AppCompatActivity() {
         binding.recyclerView.adapter = adapter
     }
 
+    suspend fun getHistoryByPlayerSuspend(playerId: String): List<GameResult> = suspendCancellableCoroutine { continuation ->
+        GameResultDao().getHistoryByPlayer(playerId) { gameResults ->
+            continuation.resume(gameResults)
+        }
+    }
+
+    suspend fun findPlayerByIdSuspend(playerId: String): Player? = suspendCancellableCoroutine { continuation ->
+        PlayerDao().findPlayerById(playerId) { player ->
+            if (player != null) {
+                continuation.resume(player)
+            } else {
+                continuation.resume(null) // Jugador no encontrado
+            }
+        }
+    }
+
     private fun navegarPantallaJuego() {
         val intent = Intent(this, GameActivity::class.java)
         intent.putExtra("jugadorId", jugadorActual?.id)
@@ -195,14 +219,6 @@ class HistoryActivity : AppCompatActivity() {
         val musicIntent = Intent(this, MusicService::class.java)
         musicIntent.action = "com.example.producto3.GET_MUSIC_STATE"
         startService(musicIntent)
-    }
-
-    private fun selectMusicFromDevice() {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-            type = "audio/*"
-            addCategory(Intent.CATEGORY_OPENABLE)
-        }
-        startActivityForResult(intent, 200)
     }
 
     private val selectMusicLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
