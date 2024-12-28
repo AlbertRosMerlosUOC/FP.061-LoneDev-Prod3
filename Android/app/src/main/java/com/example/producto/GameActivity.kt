@@ -75,7 +75,6 @@ class GameActivity : AppCompatActivity() {
         "s6"
     )
     var jugadorId = "-1"
-    // TODO Borrar ? var database = FirebaseDatabase.getInstance().getReference()
 
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -127,11 +126,7 @@ class GameActivity : AppCompatActivity() {
 
         binding.buttonScreenshot.setOnClickListener {
             val screenshot = captureScreenshot()
-            if (screenshot != null) {
-                saveImageToGallery(screenshot)
-            } else {
-                showToast(getString(R.string.screenshot_error))
-            }
+            saveImageToGallery(screenshot)
         }
 
         val musicIntent = Intent(this, MusicService::class.java)
@@ -423,9 +418,7 @@ class GameActivity : AppCompatActivity() {
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
                         jugadorActual?.let {
-                            /* TODO if (it.id != 0) {
-                                database.playerDao().deletePlayer(it)
-                            } */
+                            playerDao.deletePlayer(jugadorId)
                         }
                     }
                     val intent = Intent(applicationContext, LoginActivity::class.java)

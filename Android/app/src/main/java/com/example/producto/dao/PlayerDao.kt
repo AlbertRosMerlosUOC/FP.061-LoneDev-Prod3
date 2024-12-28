@@ -66,7 +66,8 @@ class PlayerDao {
     }
 
     fun deletePlayer(playerId: String) {
-        db.child(playerId).removeValue()
+        val encodedId = playerId.replace(".", ",")
+        db.child(encodedId).removeValue()
             .addOnSuccessListener {
                 Log.d("Firebase", "Jugador eliminado correctamente.")
             }

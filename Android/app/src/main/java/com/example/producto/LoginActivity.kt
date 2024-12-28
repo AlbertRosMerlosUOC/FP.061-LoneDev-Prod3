@@ -37,15 +37,12 @@ class LoginActivity : AppCompatActivity() {
     private var jugadorActual: Player? = null
     private var musicReceiver: MusicReceiver? = null
     var selectedLanguage = ""
-    // TODO Borrar ? var database = FirebaseDatabase.getInstance().getReference()
 
     private val RC_SIGN_IN = 1001
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // TODO ??? database = FirebaseDatabase.getInstance().getReference()
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -145,6 +142,7 @@ class LoginActivity : AppCompatActivity() {
                                 val newPlayer = Player(id = playerEmail, name = playerName, coins = 100)
                                 playerRef.setValue(newPlayer).addOnCompleteListener { saveTask ->
                                     if (saveTask.isSuccessful) {
+                                        jugadorActual = newPlayer
                                         navegarPantallaJuego()
                                     } else {
                                         Log.e("LoginActivity", "Error al guardar el jugador: ${saveTask.exception}")
