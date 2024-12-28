@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
@@ -14,17 +15,25 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.producto.dao.PlayerDao
 import com.example.producto3.databinding.ActivityLeaderboardBinding
 import com.example.producto.model.Player
 import com.example.producto3.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import java.util.Locale
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class LeaderboardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLeaderboardBinding
-    // TODO private lateinit var database: AppDatabase
     private var musicReceiver: MusicReceiver? = null
     private var jugadorActual: Player? = null
+    private val playerDao = PlayerDao()
 
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,15 +46,13 @@ class LeaderboardActivity : AppCompatActivity() {
             showLanguagePopup(view)
         }
 
-        // TODO database = AppDatabase.getInstance(this)
+        val jugadorId = intent.getStringExtra("jugadorId").toString()
 
-        val jugadorId = intent.getIntExtra("jugadorId", -1)
-
-        /* TODO lifecycleScope.launch {
-            jugadorActual = withContext(Dispatchers.IO) {
-                database.playerDao().getAllPlayers().find { it.id == jugadorId }
+        playerDao.findPlayerById(jugadorId) { player ->
+            if (player != null) {
+                jugadorActual = player
             }
-        } */
+        }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         actualizarClasificacion()
@@ -116,7 +123,7 @@ class LeaderboardActivity : AppCompatActivity() {
 
     private fun restartActivityWithLocale(languageCode: String) {
         saveSelectedLanguage(this, languageCode)
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         finish()
         startActivity(intent)
@@ -139,14 +146,26 @@ class LeaderboardActivity : AppCompatActivity() {
     }
 
     private fun actualizarClasificacion() {
-        /* TODO CoroutineScope(Dispatchers.IO).launch {
-            val jugadoresOrdenados = database.playerDao().getAllPlayers().sortedByDescending { it.coins }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val jugadoresOrdenados = getAllPlayersSuspend().sortedByDescending { it.coins }
 
-            withContext(Dispatchers.Main) {
-                val adapter = LeaderboardAdapter(jugadoresOrdenados)
-                binding.recyclerView.adapter = adapter
+                withContext(Dispatchers.Main) {
+                    val adapter = LeaderboardAdapter(jugadoresOrdenados)
+                    binding.recyclerView.adapter = adapter
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("Leaderboard", "Error al obtener jugadores: ${e.message}")
+                }
             }
-        } */
+        }
+    }
+
+    suspend fun getAllPlayersSuspend(): List<Player> = suspendCancellableCoroutine { continuation ->
+        PlayerDao().getAllPlayers { players ->
+            continuation.resume(players)
+        }
     }
 
     private fun navegarPantallaJuego() {
@@ -162,7 +181,7 @@ class LeaderboardActivity : AppCompatActivity() {
     }
 
     private fun navegarPantallaInicio() {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
     }
 

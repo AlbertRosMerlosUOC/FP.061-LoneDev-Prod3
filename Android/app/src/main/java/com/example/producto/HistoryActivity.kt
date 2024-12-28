@@ -125,7 +125,7 @@ class HistoryActivity : AppCompatActivity() {
 
     private fun restartActivityWithLocale(languageCode: String) {
         saveSelectedLanguage(this, languageCode)
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         finish()
         startActivity(intent)
@@ -167,7 +167,7 @@ class HistoryActivity : AppCompatActivity() {
     }
 
     private fun navegarPantallaInicio() {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
     }
 
