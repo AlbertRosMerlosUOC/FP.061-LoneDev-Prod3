@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "682171285879",
+    "firebase_url": "https://fp061-lonedev-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "fp061-lonedev",
+    "storage_bucket": "fp061-lonedev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682171285879:android:732c5f540d3a5c86b16172",
+        "android_client_info": {
+          "package_name": "com.example.producto3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "682171285879-m4rl9jg64rpoqqgv378rnf164vqennsi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.producto3",
+            "certificate_hash": "95913952103f935765a21c17273cdfd960439895"
+          }
+        },
+        {
+          "client_id": "682171285879-o9tfm8jr6pmo40ukgg6blra66nnng5lh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8p9xqMo5NRFwxxQUVpJtaKcyjJuEEtWU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "682171285879-o9tfm8jr6pmo40ukgg6blra66nnng5lh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
