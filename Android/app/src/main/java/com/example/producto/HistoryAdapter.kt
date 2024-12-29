@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.producto3.R
 import com.example.producto3.databinding.ItemHistoryBinding
 import com.example.producto.model.GameResult
@@ -45,14 +46,17 @@ class HistoryAdapter(private val partidas: List<GameResult>) :
 
         Glide.with(holder.itemView.context)
             .load(resultImageMap[partida.result1])
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(holder.binding.result1ImageView)
 
         Glide.with(holder.itemView.context)
             .load(resultImageMap[partida.result2])
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(holder.binding.result2ImageView)
 
         Glide.with(holder.itemView.context)
             .load(resultImageMap[partida.result3])
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(holder.binding.result3ImageView)
     }
 

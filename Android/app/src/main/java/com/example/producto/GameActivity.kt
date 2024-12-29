@@ -37,9 +37,11 @@ import android.widget.ImageButton
 import android.widget.PopupMenu
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationCompat
+import com.example.producto.dao.BonusDao
 import com.example.producto.dao.PlayerDao
 import com.example.producto3.R
 import com.example.producto.dao.GameResultDao
+import com.example.producto.model.Bonus
 import com.example.producto.model.Player
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -55,6 +57,7 @@ class GameActivity : AppCompatActivity() {
     private var jugadorActual: Player? = null
     private val playerDao = PlayerDao()
     private val gameResultDao = GameResultDao()
+    private val bonusDao = BonusDao()
     private val CALENDAR_PERMISSION_REQUEST_CODE = 101
     private val NOTIFICATIONS_PERMISSION_REQUEST_CODE = 102
     private val LOCATION_PERMISSION_REQUEST_CODE = 103
@@ -273,7 +276,14 @@ class GameActivity : AppCompatActivity() {
         if (symbol1Name == "s0" && symbol2Name == "s0" && symbol3Name == "s0") {
             jugadorActual?.coins = jugadorActual?.coins?.plus(500) ?: 0
             actualizarTextoResultado(5, getString(R.string.result_0))
-            resultadoPremio = 500
+            var claimedBonus = 0
+            bonusDao.getBonus() { bonus ->
+                if (bonus != null) {
+                    claimedBonus = bonus.bonus
+                    // TODO Mensaje del bonus recibido
+                }
+            }
+            resultadoPremio = 500 + claimedBonus
             screenshotLinearLayout.visibility = View.VISIBLE
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 (checkSelfPermission(android.Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
@@ -285,7 +295,7 @@ class GameActivity : AppCompatActivity() {
                 solicitarPermisosCalendario()
             }
             mostrarNotificacionVictoria()
-
+            bonusDao.resetBonus()
         } else if (symbol1Name == "s6" && symbol2Name == "s6" && symbol3Name == "s6") {
             jugadorActual?.coins = jugadorActual?.coins?.minus(100)?.coerceAtLeast(0) ?: 0
             actualizarTextoResultado(1, getString(R.string.loss_death))
@@ -330,6 +340,7 @@ class GameActivity : AppCompatActivity() {
             actualizarTextoResultado(2, getString(R.string.try_again))
             resultadoPremio = -10
             screenshotLinearLayout.visibility = View.INVISIBLE
+            bonusDao.incrementBonus()
         }
 
         if (jugadorActual?.coins == 0) {
