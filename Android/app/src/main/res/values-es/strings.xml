@@ -17,7 +17,7 @@
     <string name="leaderboard">Clasificación</string>
     <string name="history">Historial</string>
     <string name="seleccion_jugador">Selección de jugador</string>
-    <string name="cambio_jugador">Cambiar de jugador</string>
+    <string name="cambio_jugador">Cambiar jugador</string>
     <string name="spin">Gira para obtener recompensas</string>
     <string name="do_screenshot">¡Inmortaliza tu proeza!</string>
     <string name="historial_partidas">Historial de partidas</string>
@@ -64,4 +64,6 @@
     <string name="victory">¡Victoria!</string>
     <string name="victory_text">¡Felicidades! Has ganado una partida.</string>
     <string name="signIn">Iniciar sesión con Google</string>
+    <string name="bonusActual">Premio acumulado: %d</string>
+    <string name="bonusVictory">¡Has ganado el premio acumulado de %d monedas!</string>
 </resources>

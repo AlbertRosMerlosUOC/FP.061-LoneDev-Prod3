@@ -17,7 +17,7 @@
     <string name="leaderboard">Classificació</string>
     <string name="history">Historial</string>
     <string name="seleccion_jugador">Selecció de jugador</string>
-    <string name="cambio_jugador">Canviar de jugador</string>
+    <string name="cambio_jugador">Canviar jugador</string>
     <string name="spin">Gira per obtenir recompenses</string>
     <string name="do_screenshot">Immortalitza la teva proesa!</string>
     <string name="historial_partidas">Historial de partides</string>
@@ -64,4 +64,6 @@
     <string name="victory">Victòria!</string>
     <string name="victory_text">Felicitats! Has guanyat una partida.</string>
     <string name="signIn">Iniciar sessió amb Google</string>
+    <string name="bonusActual">Premi acumulat: %d</string>
+    <string name="bonusVictory">Has guanyat el premi acumulat de %d monedes!</string>
 </resources>

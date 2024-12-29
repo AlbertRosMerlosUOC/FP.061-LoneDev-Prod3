@@ -35,6 +35,7 @@ import android.os.Build
 import android.view.MenuItem
 import android.widget.ImageButton
 import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationCompat
 import com.example.producto.dao.BonusDao
@@ -63,18 +64,18 @@ class GameActivity : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 103
     private val symbols = listOf(
         R.drawable.ic_reels_0,
-        R.drawable.ic_reels_2,
-        R.drawable.ic_reels_3,
-        R.drawable.ic_reels_4,
-        R.drawable.ic_reels_5,
+        //R.drawable.ic_reels_2,
+        //R.drawable.ic_reels_3,
+        //R.drawable.ic_reels_4,
+        //R.drawable.ic_reels_5,
         R.drawable.ic_reels_6
     )
     private val symbolNames = listOf(
         "s0",
-        "s2",
-        "s3",
-        "s4",
-        "s5",
+        //"s2",
+        //"s3",
+        //"s4",
+        //"s5",
         "s6"
     )
     var jugadorId = "-1"
@@ -105,6 +106,12 @@ class GameActivity : AppCompatActivity() {
                 jugadorActual = player
                 actualizarMonedas()
             }
+        }
+
+        bonusDao.getBonus { bonus ->
+            val bonusValue = bonus?.bonus ?: 0
+            val bonusText = if (bonusValue > 0) getString(R.string.bonusActual, bonusValue) else ""
+            findViewById<TextView>(R.id.bonusTextView).text = bonusText
         }
 
         binding.spinButton.setOnClickListener {
@@ -271,78 +278,86 @@ class GameActivity : AppCompatActivity() {
         val symbol2Name = if (symbol2Index != -1) symbolNames[symbol2Index] else "-1"
         val symbol3Name = if (symbol3Index != -1) symbolNames[symbol3Index] else "-1"
 
-        var resultadoPremio = 0
-
         if (symbol1Name == "s0" && symbol2Name == "s0" && symbol3Name == "s0") {
-            jugadorActual?.coins = jugadorActual?.coins?.plus(500) ?: 0
-            actualizarTextoResultado(5, getString(R.string.result_0))
-            var claimedBonus = 0
-            bonusDao.getBonus() { bonus ->
-                if (bonus != null) {
-                    claimedBonus = bonus.bonus
-                    // TODO Mensaje del bonus recibido
-                }
+            bonusDao.getBonus { bonus ->
+                val claimedBonus = bonus?.bonus ?: 0
+                val resultadoPremio = 500 + claimedBonus
+                jugadorActual?.coins = jugadorActual?.coins?.plus(resultadoPremio) ?: 0
+                actualizarTextoResultado(5, getString(R.string.result_0))
+                screenshotLinearLayout.visibility = View.VISIBLE
+                manejarVictoria(getString(R.string.victory_title), getString(R.string.victory_0))
+                val bonusText = if (claimedBonus > 0) getString(R.string.bonusVictory, claimedBonus) else ""
+                println(bonusText)
+                findViewById<TextView>(R.id.bonusTextView).text = bonusText
+                bonusDao.resetBonus()
+                finalizarJuego(resultadoPremio, symbol1Name, symbol2Name, symbol3Name, callback)
             }
-            resultadoPremio = 500 + claimedBonus
-            screenshotLinearLayout.visibility = View.VISIBLE
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                (checkSelfPermission(android.Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
-                        checkSelfPermission(android.Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED)) {
-
-                registrarVictoriaEnCalendario(getString(R.string.victory_title),
-                    getString(R.string.victory_0))
-            } else {
-                solicitarPermisosCalendario()
-            }
-            mostrarNotificacionVictoria()
-            bonusDao.resetBonus()
-        } else if (symbol1Name == "s6" && symbol2Name == "s6" && symbol3Name == "s6") {
-            jugadorActual?.coins = jugadorActual?.coins?.minus(100)?.coerceAtLeast(0) ?: 0
-            actualizarTextoResultado(1, getString(R.string.loss_death))
-            resultadoPremio = -100
-            screenshotLinearLayout.visibility = View.INVISIBLE
-        } else if (symbol1Name == symbol2Name && symbol2Name == symbol3Name && symbol1Name != "s0" && symbol1Name != "s6") {
-            jugadorActual?.coins = jugadorActual?.coins?.plus(100) ?: 0
-            actualizarTextoResultado(4, getString(R.string.result_1))
-            resultadoPremio = 100
-            screenshotLinearLayout.visibility = View.VISIBLE
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                (checkSelfPermission(android.Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
-                        checkSelfPermission(android.Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED)) {
-
-                registrarVictoriaEnCalendario(getString(R.string.victory_title),
-                    getString(R.string.victory_1))
-            } else {
-                solicitarPermisosCalendario()
-            }
-            mostrarNotificacionVictoria()
-
-        } else if ((symbol1Name == symbol2Name && symbol1Name != "s6" && symbol2Name != "s6") ||
-            (symbol2Name == symbol3Name && symbol2Name != "s6" && symbol3Name != "s6") ||
-            (symbol1Name == symbol3Name && symbol1Name != "s6" && symbol3Name != "s6")) {
-            jugadorActual?.coins = jugadorActual?.coins?.plus(20) ?: 0
-            actualizarTextoResultado(3, getString(R.string.result_2))
-            resultadoPremio = 20
-            screenshotLinearLayout.visibility = View.VISIBLE
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                (checkSelfPermission(android.Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
-                        checkSelfPermission(android.Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED)) {
-
-                registrarVictoriaEnCalendario(getString(R.string.victory_title),
-                    getString(R.string.victory_2))
-            } else {
-                solicitarPermisosCalendario()
-            }
-            mostrarNotificacionVictoria()
-
         } else {
-            jugadorActual?.coins = jugadorActual?.coins?.minus(10)?.coerceAtLeast(0) ?: 0
-            actualizarTextoResultado(2, getString(R.string.try_again))
-            resultadoPremio = -10
-            screenshotLinearLayout.visibility = View.INVISIBLE
-            bonusDao.incrementBonus()
+            val resultadoPremio = manejarResultadoNoEspecial(symbol1Name, symbol2Name, symbol3Name, screenshotLinearLayout)
+            finalizarJuego(resultadoPremio, symbol1Name, symbol2Name, symbol3Name, callback)
         }
+    }
 
+    private fun manejarResultadoNoEspecial(
+        symbol1Name: String,
+        symbol2Name: String,
+        symbol3Name: String,
+        screenshotLinearLayout: LinearLayout
+    ): Int {
+        return when {
+            symbol1Name == "s6" && symbol2Name == "s6" && symbol3Name == "s6" -> {
+                jugadorActual?.coins = jugadorActual?.coins?.minus(100)?.coerceAtLeast(0) ?: 0
+                actualizarTextoResultado(1, getString(R.string.loss_death))
+                screenshotLinearLayout.visibility = View.INVISIBLE
+                -100
+            }
+            symbol1Name == symbol2Name && symbol2Name == symbol3Name && symbol1Name != "s0" && symbol1Name != "s6" -> {
+                jugadorActual?.coins = jugadorActual?.coins?.plus(100) ?: 0
+                actualizarTextoResultado(4, getString(R.string.result_1))
+                screenshotLinearLayout.visibility = View.VISIBLE
+                manejarVictoria(getString(R.string.victory_title), getString(R.string.victory_1))
+                100
+            }
+            (symbol1Name == symbol2Name && symbol1Name != "s6") ||
+                    (symbol2Name == symbol3Name && symbol2Name != "s6") ||
+                    (symbol1Name == symbol3Name && symbol1Name != "s6") -> {
+                jugadorActual?.coins = jugadorActual?.coins?.plus(20) ?: 0
+                actualizarTextoResultado(3, getString(R.string.result_2))
+                screenshotLinearLayout.visibility = View.VISIBLE
+                manejarVictoria(getString(R.string.victory_title), getString(R.string.victory_2))
+                20
+            }
+            else -> {
+                jugadorActual?.coins = jugadorActual?.coins?.minus(10)?.coerceAtLeast(0) ?: 0
+                actualizarTextoResultado(2, getString(R.string.try_again))
+                screenshotLinearLayout.visibility = View.INVISIBLE
+                //bonusDao.incrementBonus()
+                lifecycleScope.launch {
+                    bonusDao.incrementBonus { }
+                }
+                -10
+            }
+        }
+    }
+
+    private fun manejarVictoria(title: String, description: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            checkSelfPermission(android.Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
+            checkSelfPermission(android.Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            registrarVictoriaEnCalendario(title, description)
+        } else {
+            solicitarPermisosCalendario()
+        }
+        mostrarNotificacionVictoria()
+    }
+
+    private fun finalizarJuego(
+        resultadoPremio: Int,
+        symbol1Name: String,
+        symbol2Name: String,
+        symbol3Name: String,
+        callback: (GameResult?) -> Unit
+    ) {
         if (jugadorActual?.coins == 0) {
             showDeletePlayerDialog()
         } else {
@@ -356,20 +371,7 @@ class GameActivity : AppCompatActivity() {
 
         obtenerUbicacion { location ->
             val gameResult = jugadorActual?.id?.let { playerId ->
-                val calendar = Calendar.getInstance()
-                val currentDateTime = String.format(
-                    "%02d/%02d/%d %02d:%02d:%02d",
-                    calendar.get(Calendar.DAY_OF_MONTH),
-                    calendar.get(Calendar.MONTH) + 1,
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(Calendar.MINUTE),
-                    calendar.get(Calendar.SECOND)
-                )
-
-                println(getString(R.string.user_location) +
-                        " [" + location + "]")
-
+                val currentDateTime = obtenerFechaActual()
                 GameResult(
                     playerId = playerId,
                     loot = resultadoPremio,
@@ -384,6 +386,28 @@ class GameActivity : AppCompatActivity() {
             callback(gameResult)
         }
     }
+
+    /*private fun actualizarBonus() {
+        bonusDao.getBonus { bonus ->
+            val bonusValue = bonus?.bonus ?: 0
+            val bonusText = if (bonusValue > 0) getString(R.string.bonusActual, bonusValue) else ""
+            findViewById<TextView>(R.id.bonusTextView).text = bonusText
+        }
+    }*/
+
+    private fun obtenerFechaActual(): String {
+        val calendar = Calendar.getInstance()
+        return String.format(
+            "%02d/%02d/%d %02d:%02d:%02d",
+            calendar.get(Calendar.DAY_OF_MONTH),
+            calendar.get(Calendar.MONTH) + 1,
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
+            calendar.get(Calendar.SECOND)
+        )
+    }
+
 
     private fun adjustSpinnerSoundVolume() {
         val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)

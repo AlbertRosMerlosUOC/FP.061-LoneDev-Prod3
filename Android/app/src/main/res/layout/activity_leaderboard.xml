@@ -127,7 +127,7 @@
 
                 <Button
                     android:id="@+id/botonIniciarJuego"
-                    android:layout_width="150sp"
+                    android:layout_width="160sp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:backgroundTint="#FF7518"
@@ -139,7 +139,7 @@
 
                 <Button
                     android:id="@+id/historyButton"
-                    android:layout_width="150sp"
+                    android:layout_width="160sp"
                     android:layout_height="wrap_content"
                     android:backgroundTint="#4B0082"
                     android:elevation="10dp"
@@ -149,16 +149,35 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/changeUserButton"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#4B0082"
-                android:elevation="10dp"
-                android:fontFamily="@font/exo_2_bold"
-                android:text="@string/cambio_jugador"
-                android:textColor="#ffffff"
-                android:textSize="14sp" />
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/topTenButton"
+                    android:layout_width="160sp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/top_ten"
+                    android:textSize="14sp"
+                    android:textColor="#ffffff"
+                    android:backgroundTint="#4B0082"
+                    android:fontFamily="@font/exo_2_bold"
+                    android:elevation="10dp" />
+
+                <Button
+                    android:id="@+id/changeUserButton"
+                    android:layout_width="160sp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#4B0082"
+                    android:elevation="10dp"
+                    android:fontFamily="@font/exo_2_bold"
+                    android:text="@string/cambio_jugador"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

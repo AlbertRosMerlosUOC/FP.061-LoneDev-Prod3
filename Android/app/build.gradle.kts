@@ -79,5 +79,12 @@ dependencies {
     implementation ("com.google.android.gms:play-services-auth:20.7.0") // Google Sign-In
     implementation ("com.google.firebase:firebase-database-ktx")        // Realtime Database
     implementation ("com.google.firebase:firebase-firestore-ktx")       // Firestore
+    // Moshi y Retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-moshi:2.9.0")
+    implementation ("com.squareup.moshi:moshi:1.15.0")
+    implementation ("com.squareup.moshi:moshi-kotlin:1.15.0")
+    kapt ("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
+
 
 }

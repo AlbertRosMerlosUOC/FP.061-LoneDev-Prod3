@@ -64,4 +64,6 @@
     <string name="victory">Victory!</string>
     <string name="victory_text">Congratulations! You won a game.</string>
     <string name="signIn">Login with Google Account</string>
+    <string name="bonusActual">Accumulated bonus: %d coins</string>
+    <string name="bonusVictory">You\'ve won the accumulated bonus of %d coins!</string>
 </resources>

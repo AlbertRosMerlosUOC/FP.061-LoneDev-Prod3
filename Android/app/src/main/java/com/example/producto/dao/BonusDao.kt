@@ -11,21 +11,42 @@ class BonusDao {
     private val db = Firebase.database.reference.child("Bonus")
 
     fun getBonus(callback: (Bonus?) -> Unit) {
-        db.get()
+        db.child("bonus").get()
             .addOnSuccessListener { snapshot ->
-                val bonus = snapshot.children.firstOrNull()?.getValue(Bonus::class.java)
-                callback(bonus)
+                val bonusValue = snapshot.getValue(Int::class.java)
+                if (bonusValue != null) {
+                    val bonus = Bonus(bonusValue)
+                    callback(bonus)
+                } else {
+                    callback(null)
+                }
             }
             .addOnFailureListener { e ->
                 callback(null)
             }
     }
 
-    fun incrementBonus() {
+    fun getBonusValue(callback: (Int?) -> Unit) {
+        db.child("bonus").get()
+            .addOnSuccessListener { snapshot ->
+                val bonusValue = snapshot.getValue(Int::class.java)
+                if (bonusValue != null) {
+                    callback(bonusValue)
+                } else {
+                    callback(null)
+                }
+            }
+            .addOnFailureListener { e ->
+                callback(null)
+            }
+    }
+
+    fun incrementBonus(callback: (Int) -> Unit) {
         val bonusRef = Firebase.database.reference.child("Bonus").child("bonus")
         bonusRef.get().addOnSuccessListener { snapshot ->
             val currentAmount = snapshot.getValue(Int::class.java) ?: 0
             bonusRef.setValue(currentAmount + 10)
+            callback(currentAmount + 10)
         }
     }
 
