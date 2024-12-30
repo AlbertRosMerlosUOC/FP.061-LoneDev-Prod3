@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="4dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/playerIdTextView"
+        android:layout_width="155sp"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:paddingBottom="4dp"
+        android:fontFamily="@font/exo_2_bold"
+        android:textColor="#000000" />
+    <TextView
+        android:id="@+id/lootTextView"
+        android:layout_width="40sp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/exo_2_medium"
+        android:paddingBottom="4dp"
+        android:textColor="#000000"
+        android:textSize="15sp" />
+    <TextView
+        android:id="@+id/fechaTextView"
+        android:layout_width="190sp"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:paddingBottom="4dp"
+        android:fontFamily="@font/exo_2_medium"
+        android:textColor="#000000" />
+
+</LinearLayout>

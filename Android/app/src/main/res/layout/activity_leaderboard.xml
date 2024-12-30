@@ -127,7 +127,7 @@
 
                 <Button
                     android:id="@+id/botonIniciarJuego"
-                    android:layout_width="160sp"
+                    android:layout_width="180sp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:backgroundTint="#FF7518"
@@ -139,7 +139,7 @@
 
                 <Button
                     android:id="@+id/historyButton"
-                    android:layout_width="160sp"
+                    android:layout_width="180sp"
                     android:layout_height="wrap_content"
                     android:backgroundTint="#4B0082"
                     android:elevation="10dp"
@@ -157,7 +157,7 @@
 
                 <Button
                     android:id="@+id/topTenButton"
-                    android:layout_width="160sp"
+                    android:layout_width="180sp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:text="@string/top_ten"
@@ -169,7 +169,7 @@
 
                 <Button
                     android:id="@+id/changeUserButton"
-                    android:layout_width="160sp"
+                    android:layout_width="180sp"
                     android:layout_height="wrap_content"
                     android:backgroundTint="#4B0082"
                     android:elevation="10dp"

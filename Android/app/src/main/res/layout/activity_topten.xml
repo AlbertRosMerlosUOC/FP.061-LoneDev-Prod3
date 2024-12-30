@@ -94,7 +94,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/historial_partidas"
+            android:text="@string/top_ten"
             android:layout_marginBottom="16dp"
             android:gravity="center"
             android:fontFamily="@font/exo_2_bold"
@@ -156,11 +156,11 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/topTenButton"
+                    android:id="@+id/historyButton"
                     android:layout_width="180sp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:text="@string/top_ten"
+                    android:text="@string/history"
                     android:textSize="14sp"
                     android:textColor="#ffffff"
                     android:backgroundTint="#4B0082"

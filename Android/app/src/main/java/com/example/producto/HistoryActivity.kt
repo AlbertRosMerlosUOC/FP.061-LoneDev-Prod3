@@ -80,6 +80,12 @@ class HistoryActivity : AppCompatActivity() {
             navegarPantallaLeaderboard()
         }
 
+        binding.topTenButton.setOnClickListener {
+            val intent = Intent(this, ToptenActivity::class.java)
+            intent.putExtra("jugadorId", jugadorId)
+            startActivity(intent)
+        }
+
         binding.changeUserButton.setOnClickListener {
             navegarPantallaInicio()
         }

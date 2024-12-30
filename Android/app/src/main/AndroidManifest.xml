@@ -34,6 +34,7 @@
         <activity android:name="com.example.producto.LeaderboardActivity" />
         <activity android:name="com.example.producto.HistoryActivity" />
         <activity android:name="com.example.producto.HelpActivity" />
+        <activity android:name="com.example.producto.ToptenActivity" />
 
         <activity android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
             android:excludeFromRecents="true"

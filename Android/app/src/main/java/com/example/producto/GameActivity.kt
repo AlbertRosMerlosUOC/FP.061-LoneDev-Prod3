@@ -108,12 +108,6 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
-        bonusDao.getBonus { bonus ->
-            val bonusValue = bonus?.bonus ?: 0
-            val bonusText = if (bonusValue > 0) getString(R.string.bonusActual, bonusValue) else ""
-            findViewById<TextView>(R.id.bonusTextView).text = bonusText
-        }
-
         binding.spinButton.setOnClickListener {
             spinReels()
         }
@@ -130,6 +124,12 @@ class GameActivity : AppCompatActivity() {
 
         binding.historyButton.setOnClickListener {
             val intent = Intent(this, HistoryActivity::class.java)
+            intent.putExtra("jugadorId", jugadorId)
+            startActivity(intent)
+        }
+
+        binding.topTenButton.setOnClickListener {
+            val intent = Intent(this, ToptenActivity::class.java)
             intent.putExtra("jugadorId", jugadorId)
             startActivity(intent)
         }
@@ -304,6 +304,7 @@ class GameActivity : AppCompatActivity() {
         symbol3Name: String,
         screenshotLinearLayout: LinearLayout
     ): Int {
+        findViewById<TextView>(R.id.bonusTextView).text = ""
         return when {
             symbol1Name == "s6" && symbol2Name == "s6" && symbol3Name == "s6" -> {
                 jugadorActual?.coins = jugadorActual?.coins?.minus(100)?.coerceAtLeast(0) ?: 0
