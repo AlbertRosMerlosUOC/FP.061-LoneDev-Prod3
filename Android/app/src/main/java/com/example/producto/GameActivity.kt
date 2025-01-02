@@ -64,18 +64,18 @@ class GameActivity : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 103
     private val symbols = listOf(
         R.drawable.ic_reels_0,
-        //R.drawable.ic_reels_2,
-        //R.drawable.ic_reels_3,
-        //R.drawable.ic_reels_4,
-        //R.drawable.ic_reels_5,
+        R.drawable.ic_reels_2,
+        R.drawable.ic_reels_3,
+        R.drawable.ic_reels_4,
+        R.drawable.ic_reels_5,
         R.drawable.ic_reels_6
     )
     private val symbolNames = listOf(
         "s0",
-        //"s2",
-        //"s3",
-        //"s4",
-        //"s5",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
         "s6"
     )
     var jugadorId = "-1"
